@@ -1,0 +1,131 @@
+<style>
+/* Contenedor del código */
+.codigo-contenedor {
+    position: relative;
+    border: 1px solid #e1e4e8;
+    border-radius: 5px;
+    background-color: #f6f8fa;
+    padding: 10px;
+    font-family: Consolas, 'Courier New', Courier, monospace;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+/* Estilo del botón "Bash script" */
+.boton-tipo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: default;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo del botón de copiar */
+.boton-copiar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para el botón al pasar el ratón */
+.boton-copiar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para el bloque de código */
+pre {
+    margin: 0;
+    background-color: #f6f8fa;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+/* Resaltado de código por Highlight.js */
+pre code {
+    font-size: 14px;
+    background-color: transparent;
+}
+</style>
+<div class="codigo-contenedor"><button class="boton-tipo" title="Tipo de código"> Bash script </button> <button class="boton-copiar" onclick="copiarCodigo()" title="Copiar código"> ⎘ Copiar código </button>
+<pre><code class="bash">
+#!/bin/bash
+if [ $# -eq 2 ]; then #Se comprueba que el número de parámetros es 2 (opción y dni)
+ if [[ $2 =~ ^[0-9]{8}[A-Za-z]$ ]]; then #Se comprueba que el segundo parámetro (dni) tenga el formato correcto
+#--------- COGER LOS DATOS DEL TRABAJADOR --------
+ Num=$(grep -i "$2" bdreparto | cut -d ':' -f1)
+ Nom=$(grep -i "$2" bdreparto | cut -d ':' -f2)
+ Apellido=$(grep -i "$2" bdreparto | cut -d ':' -f3)
+ DNI=$(grep -i "$2" bdreparto | cut -d ':' -f4)
+ SueldoMensual=$(grep -i "$2" bdreparto | cut -d ':' -f5)
+ Puesto=$(grep -i "$2" bdreparto | cut -d ':' -f6)
+#-------------------------------------------------
+if [ "$DNI" != "" ]; then
+ case $1 in
+ -m)
+ echo "NºEmpleado Nombre Apellido DNI Puesto Trabajo Sueldo Mensual(euros)"
+ echo "$Num $Nom $Apellido $DNI $Puesto $SueldoMensual"
+ ;;
+ -a)
+ case $Puesto in
+ 'Productor') extraordinaria=1500 ;;
+ 'Director') extraordinaria=900 ;;
+ 'Actor principal') extraordinaria=854 ;;
+ 'Actor') extraordinaria=700 ;;
+ 'Guionista') extraordinaria=500 ;;
+ esac
+ Anual=$(( $SueldoMensual*12 ))
+ Extra=$(( $extraordinaria*2 ))
+ SueldoAnual=$(( $Anual + $Extra ))
+ echo "Nombre Apellido DNI Sueldo Mensual Sueldo Anual"
+ echo $Nom $Apellido $DNI $SueldoMensual "euros" $SueldoAnual "euros"
+ ;;
+ *)
+ echo -e "La opción especificada no existe. Las opciones posibles son:\n-m \n-a "
+ ;;
+ esac
+ echo ""
+ else
+ echo -e "El DNI especificado no existe \n"
+ fi
+ else
+ echo -e "Error: El DNI no tiene el formato correcto. \n"
+ fi
+else
+ echo -e "Debes introducir exactamente 2 parámetros \n"
+fi
+    </code></pre>
+</div>
+<!-- Script para copiar el contenido del código -->
+<p>
+<script>
+function copiarCodigo() {
+    var codigo = document.querySelector('pre code').innerText;
+    navigator.clipboard.writeText(codigo).then(function() {
+        alert("Código copiado al portapapeles");
+    }, function(err) {
+        console.error("Error al copiar: ", err);
+    });
+}
+</script>
+</p>

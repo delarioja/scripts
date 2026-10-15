@@ -1,0 +1,50 @@
+# Plantilla para examen: Completa el docker-compose.yml para un entorno PrestaShop con DB
+# Instrucciones: Reemplaza los placeholders (_..._) con las imagenes y directorios apropiados.
+# Usa las opciones proporcionadas en la pregunta del examen.
+# En la terminal, ejecuta: docker compose up -d
+# Abre en tu navegador: phpMyAdmin: http://localhost:8091 PrestaShop: http://localhost:8080
+
+services:
+  db:
+    image: ___________
+    container_name: prestashop_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: org
+      MYSQL_DATABASE: prestashop
+      MYSQL_USER: prestashop
+      MYSQL_PASSWORD: org
+    volumes:
+      - ___________:/var/lib/mysql
+
+  phpmyadmin:
+    image: ___________
+    container_name: prestashop_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: org
+    ports:
+      - "___________"
+    depends_on:
+      - db
+
+  prestashop:
+    image: ___________
+    container_name: prestashop_app
+    restart: always
+    environment:
+      DB_SERVER: db
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWORD: org
+    ports:
+      - "___________"
+    depends_on:
+      - db
+    volumes:
+      - ___________:/var/www/html
+
+volumes:
+  db_datos:
+  prestashop_datos:

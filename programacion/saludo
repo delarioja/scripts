@@ -1,0 +1,19 @@
+#!/bin/bash
+# script inspirado por estos articulos: https://opensource.com/article/18/12/linux-toy-lolcat
+# https://www.linuxparty.es/35-linux/10093-19-divertidos-comandos-de-linux-para-ejecutar-en-la-terminal
+sudo apt install toilet fortune cowsay boxes lolcat espeak
+
+toilet delarioja.org -f pagga --filter metal -t
+toilet delarioja.org -f bigmono9 --filter gay -t
+espeak -v es-la "Bienvenido señor $USER. Encantado de ejecutar el bash script que deseeeeeeeeeee"
+#toilet delarioja.org -f isometric3 --filter gay -t
+toilet delarioja.org -f smmono12 --filter gay -t
+cita=$(fortune)
+echo "$cita"| cowsay -f stegosaurus  | boxes -d spring | lolcat -a -d 5  &
+espeak "$cita"
+
+#también podría dejarse el mensaje en un fichero:
+#fortune > ejemplo
+#cat ejemplo| cowsay -f stegosaurus  | boxes -d spring | lolcat -a -d 5  &
+#espeak -v es-la -f ejemplo
+#rm ejemplo

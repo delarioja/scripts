@@ -1,0 +1,22 @@
+#!/bin/bash
+numero=0
+while [[ $numero -ne 3 ]]; do
+  ejercicio=$(($RANDOM%13+1))
+  echo $ejercicio >> pantalla.txt
+  while read linea; do
+
+       # o también: contar=$(grep -c $linea $2)
+       # la -c cuenta, la -w asegura que es una palabra completa con espacios a los lados
+       contar=$(grep -wc $linea pantalla.txt)
+       if [ $contar -ne 1 ]; then
+            echo "Ha salido repetido el $linea, buscando otro..."
+            grep -vw $linea pantalla.txt > nuevapantalla
+            cat nuevapantalla > pantalla.txt; rm nuevapantalla
+            #al haberlo quitado por completo lo añadimos 1 vez
+            echo $linea >> pantalla.txt
+       fi
+  done < pantalla.txt
+  numero=$(cat pantalla.txt |wc -l)
+done
+cat pantalla.txt
+rm pantalla.txt

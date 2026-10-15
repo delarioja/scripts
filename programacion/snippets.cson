@@ -1,0 +1,68 @@
+#
+#       Author: Fernando Barcina
+#  Description: Atom Editor snippets for Bash Shell Scripting
+#         URL : https://delarioja.org/scritps/programacion/snippets.cson
+# Last Changed: enero 2023
+# Installation: File to be copy/pasted into Atom Editor snippets configuration file
+
+'.source.shell':
+  # bash shell script header
+    'bash cabecera':
+      'prefix': 'bashcabecera'
+      'body': """
+  #!/bin/bash
+  #
+  # name: ${1}
+  # Description: This script ...
+  # Created by: fbarcina@iescomercio.com
+  # Fecha modificación: ${2}
+  #
+  """
+  # if...then...else...fi
+    'if...then...else...fi':
+      'prefix': 'if'
+      'body': """if [[ condition ]]; then
+          ${1}
+          #statements
+      else
+          ${2}
+          #statements
+      fi
+  """
+  # if...then...else...fi
+    'if...then...elif...fi':
+      'prefix': 'ife'
+      'body': """if [[ condition ]]; then
+          ${1}
+          #statements
+      elif [[ condicion ]]; then
+          ${2}
+          #statements
+      else
+        #accionxdefecto
+      fi
+  """
+  # init script parameters case
+    'init script case':
+      'prefix': 'caseinit'
+      'body': """
+  case \\$1 in:
+      stop)
+      ;;
+      start)
+      ;;
+      status)
+      ;;
+      restart)
+      ;;
+      reload)
+      ;;
+      # other statements
+      *)
+          ## If no parameters are given, print which are available.
+          echo \\"Usage: \\${0##*/} {stop|start|status|restart|reload}\\"
+          exit 2
+      ;;
+  esac
+  ${1}
+  """

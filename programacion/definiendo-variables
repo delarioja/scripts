@@ -1,0 +1,8 @@
+#!/bin/bash
+# Fernando Barcina
+# Modo de uso
+# invocar este programa con source desde otro y luego muestra las variables del entorno con env
+dni=16555444
+nif=$dni-L
+nombre="Fernando"
+echo "Definiendo variables... $dni $nombre: $nif"

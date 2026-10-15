@@ -1,0 +1,35 @@
+#!/bin/bash
+clear
+intentos=0
+resp=$(( $RANDOM % 100 ))
+echo "##########################################################################"
+echo "#  He pensado en un número al alzar entre 0 y 100                        #"
+echo "#  El objetivo es que intentes adivinarlo en el menor número de intentos #"
+echo "#  Pero primero, ¿Cómo te llamas?                                        #"
+echo "##########################################################################"
+read nombre
+clear
+while [[ $resp != $cont ]]
+do
+ clear
+ ((intentos++))
+ echo "########################################################"
+ echo "#  $nombre,                                            #"
+ echo "#  ¿En qué número estoy pensando?                      #"
+ echo "########################################################"
+ read cont
+ if [[ $resp > $cont ]]
+ then
+    echo "El número que estoy pensando es mayor que $cont"
+    sleep 1
+ elif [[ $resp < $cont ]]
+ then
+    echo "El número que estoy pensado es menor que $cont"
+    sleep 1
+ else
+   echo "Enhorabuena, has acertado el número $cont"
+ fi
+done
+echo -e ' \t ' $intentos ' \t ' $nombre >>adivina.txt
+echo Has hecho $intentos intentos
+sort -n adivina.txt | head -3

@@ -1,0 +1,173 @@
+#!/bin/bash
+# Por Cristina Caro
+
+agenda="agenda.txt"
+if [ ! -f agenda.txt ] # Si el archivo agenda.txt no está creado lo creamos
+then
+  touch agenda.txt
+fi
+
+function menu # Creamos en una finción las opciones del menú numeradas del 1-7
+{
+  echo "            MENU            "
+  echo "1. Añadir Contacto"
+  echo "2. Buscar contacto"
+  echo "3. Eliminar registro (por nombre)"
+  echo "4. Listar"
+  echo "5. Ordenar"
+  echo "6. Borrar archivo con todos los contactos"
+  echo "7. Modificar registro"
+}
+
+function anadir # Declaramos la opción anadir que será llamada cuando se elija la opción 1
+{
+    for (( ; ; )); # Realizamos un bucle infinito del cual solo se saldrá cuando se cumpla la condición del if (nombre = FIN)
+    do
+      echo "Introduce los datos del contacto a guardar: "
+
+      read -p "Ingresa un nombre: " nombre # Solicitamos el nombre y lo guardamos en la variable nombre
+      if [ "$nombre" = "FIN" ] # Si el valor introducido como nombre es FIN salimos del bucle
+      then
+        break
+      fi
+      read -p "Ingresa la dirección de $nombre: " dir # Solicitamos la dirección y lo almacenamos en la variable direccion
+      read -p "Ingresa el teléfono de $nombre : " tlf # Solicitamos el teléfono y lo guardamos en la variable tlf
+
+      echo "$nombre:$dir:$tlf" >> agenda.txt # Introducimos los datos almacenados en la variable separados por : en el archivo agenda.txt
+    done
+}
+opc=0 # Declaramos la variable opc y le asignamos el valor 0
+function buscar # Creamos la función buscar
+{
+  if [ ! -s agenda.txt ] # En caso que agenda.txt tenga un tamaño de cero (esté vacía) mostramos que no hay contactos
+  then
+    echo "No hay contactos"
+  else # Indicamos las opciones por las que se pueden realizar las búsquedas
+    echo "Introduce el parámetro por el que quieres buscar"
+    echo "1. Por nombre"
+    echo "2. Por dirección"
+    echo "3. Por teléfono"
+
+  read -p "Opción de búsqueda elegida: " opc # Asignamos la opción elegida a la variable opc para comprobar con ella en case
+
+    case $opc in # case para poder realizar diferentes gestiones en función de la opción elegida
+      1)
+        read -p "Introduce el nombre de la persona a buscar: " busca_nombre # Asignamos el nombre introducido a la variable busca_nombre
+        if [ $(grep -c "$busca_nombre" agenda.txt) -eq 0 ] # Si no aparece ninguna vez el nombre indicado, mostramos que no se ha localizado
+        then
+          echo "No se han encontrado registros cuyo nombre sea: $busca_nombre"
+        else # En caso que se encuentre el nombre indicado mostramos la información del contacto
+          echo " A continuación se muestra la información del contacto:
+          $(grep -i "$busca_nombre" agenda.txt)"
+        fi
+        ;;
+      2)
+        read -p "Introduce la dirección de la persona a buscar: " busca_dir # Asignamos la dirección incluida a la variable busca_dir
+        if [ $(grep -c "$busca_dir" agenda.txt) -eq 0 ] # Si no aparece ninguna vez en el archivo, mostramos que no se ha localizado
+        then
+          echo "No se han encontrado registros cuya dirección sea: $busca_dir"
+        else # Si aparece la dirección en el archivo mostramos la línea del contacto correspondiente
+          echo " A continuación se muestra la información del contacto:
+          $(grep -i "$busca_dir" agenda.txt)"
+        fi
+        ;;
+      3)
+        read -p "Introduce el teléfono de la persona a buscar: " busca_tlf # Asignamos el teléfono incluido a la variable busca_tlf
+        if [ $(grep -c "$busca_tlf" agenda.txt) -eq 0 ] # Si no aparece ninguna vez en el archivo, mostramos que no se ha localizado
+        then
+          echo "No se han encontrado registros cuyo teléfono sea: $busca_tlf"
+        else # Si aparece en el archivo mostramos la información del contacto
+          echo " A continuación se muestra la información del contacto:
+          $(grep -i "$busca_tlf" agenda.txt)"
+        fi
+        ;;
+    esac
+  fi
+}
+
+function eliminar # Creamos la función eliminar que nos permitirá eliminar contactos buscando por nombre
+{
+  if [ ! -s agenda.txt ] # En caso que agenda.txt tenga un tamaño de cero (esté vacía) mostramos que no hay contactos
+  then
+    echo "No hay contactos"
+  else # Si hay contactos
+    read -p "Introduce el nombre de la persona a eliminar: " elimina_nombre # Solicitamos el nombre del contacto a eliminar
+    if [ $(grep -c "$elimina_nombre" agenda.txt) -eq 0 ] # Si el nombre no aparece mostramos que no se ha localizado
+    then
+      echo "No se han encontrado registros cuyo nombre sea : $elimina_nombre"
+    else # Si el nombre se encuentra en la agenda, mostramos la información que vamos a eliminar
+      echo "El siguiente contacto va a ser borrado:
+      $(grep -i "$elimina_nombre" agenda.txt)"
+      sed -i "/$elimina_nombre/d" ./agenda.txt # Eliminamos el contacto
+      echo "El contacto ha sido borrado"
+    fi
+  fi
+}
+
+function listar # Creamos la función listar para mostrar el contenido de la agenda
+{
+  if [ ! -s agenda.txt ] # En caso que agenda.txt tenga un tamaño de cero (esté vacía) mostramos que no hay contactos
+  then
+    echo "No hay contactos"
+  else # Si la agenda tiene información mostramos el contenido de ésta
+    echo "A continuación se muestran los contactos introducidos en la agenda:"
+    cat $agenda
+ fi
+}
+
+function ordenar # Creamos la función ordenar, que permitirá ordenar la agenda por nombre
+{
+  if [ ! -s agenda.txt ] # En caso que agenda.txt tenga un tamaño de cero (esté vacía) mostramos que no hay contactos
+  then
+    echo "No hay contactos"
+  else # Si hay información en la agenda
+    echo "Los datos almacenados en la agenda ordenados alfabéticamente por el campo nombre son: "
+    cat agenda.txt | sort -d # Muestra la información ordenada
+  fi
+}
+
+function borrar # Creamos la función borrar que elimina el archivo agenda.txt
+{
+  sudo rm agenda.txt # Borramos agenda.txt y después informamos de ello
+  echo "Se ha eliminado agenda.txt"
+}
+
+function modificar # Creamos la función modificar, que nos permitirá sustituir datos en la agenda
+{
+  if [ ! -s agenda.txt ] # En caso que agenda.txt tenga un tamaño de cero (esté vacía) mostramos que no hay contactos
+  then
+    echo "No hay contactos"
+  else # Si en la agenda hay información
+    read -p "Introduce el dato a sustituir: " viejo_dato # Solicitamos el nombre del dato que queremos sustituir lo asignamos a la variable viejo_dato
+    if [ $(grep -c "$viejo_dato" agenda.txt) -eq 0 ] # En caso que el dato no aparezca en la agenda mostramos la información de que no consta
+    then
+      echo "No aparece ningún contacto que incluya en su nombre, dirección o teléfon: $viejo_dato"
+    else # Si el dato introducido si está en la agenda
+      read -p "Incluye el nuevo dato por el que quieres sustuir $viejo_dato: " nuevo_dato # Solicitamos el nuevo dato que sustituirá al anterior y lo asignamos a la variable nuevo_dato
+      sed -i "s/$viejo_dato/$nuevo_dato/g" agenda.txt # Realizamos la sustitución de viejo_dato por nuevo_dato en agenda.txt
+      echo "Se ha sustituido $viejo_dato por $nuevo_dato en agenda.txt" # Mostramos el aviso de la sustitución realizada
+    fi
+  fi
+}
+
+opc_menu=0 # Declaramos la variable opc_menu y la iniciamos con valor 0
+menu # Llamamos a la función menu
+read -p "Opción elegida: " opc_menu # Leemos el dato introducido y lo asignamos a la variable opc_menu, en función del valor incluido llamamos a las diferentes funciones previamente declaradas
+case $opc_menu in # Creamos un case para poder elegir entre las diferentes opciones y realizar gestiones en función de lo elegido
+  1)anadir # Llama a la función anadir
+    ;;
+  2)buscar # Llama a la función buscar
+    ;;
+  3)eliminar # Llama a la función eliminar
+    ;;
+  4)listar # Llama a la función listar
+    ;;
+  5)ordenar # Llama a la función ordenar
+    ;;
+  6)borrar # Llama a la función borrar
+    ;;
+  7)modificar # Llama a la función modificar
+    ;;
+  *) # Si marcamos cualquier cosa que no sea ninguna de las opciones anteriores mostramos un mensaje de error, indicando que no existe la opción
+    echo "Error, no existe esa opción"
+esac

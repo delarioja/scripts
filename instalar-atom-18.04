@@ -1,0 +1,11 @@
+#!/bin/bash
+# Shell Script para instalar atom en Ubuntu
+# versión para 18.04 o anterior
+# Fernando Barcina - Enero-2021
+sudo add-apt-repository ppa:webupd8team/atom
+sudo apt update
+sudo apt install atom npm
+sudo npm i -g bash-language-server
+sudo apm install atom-i18n
+sudo apm install ide-bash atom-bash-snippets
+sudo apm install minimap pigments linter atom-beautify

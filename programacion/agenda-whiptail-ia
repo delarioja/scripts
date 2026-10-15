@@ -1,0 +1,120 @@
+#!/bin/bash
+# Función para añadir un nuevo registro a la agenda
+add_record() {
+ while true; do
+ # Solicitar al usuario que introduzca el nombre
+ nombre=$(whiptail --inputbox "Introduce el nombre (FIN para
+finalizar):" 10 50 3>&1 1>&2 2>&3)
+ # Verificar si el usuario ha ingresado "FIN" para salir del
+bucle
+ if [ "$nombre" == "FIN" ]; then
+ break
+ fi
+ # Solicitar al usuario que introduzca la dirección
+ direccion=$(whiptail --inputbox "Introduce la dirección:"
+10 50 3>&1 1>&2 2>&3)
+ # Solicitar al usuario que introduzca el teléfono
+ telefono=$(whiptail --inputbox "Introduce el teléfono:" 10
+50 3>&1 1>&2 2>&3)
+ # Añadir el nuevo registro al archivo agenda.txt
+ echo -e "$nombre\t$direccion\t$telefono" >> agenda.txt
+ done
+}
+# Función para gestionar la agenda
+manage_agenda() {
+ while true; do
+ # Mostrar un menú al usuario sacar su selección
+ opcion=$(whiptail --menu "Menú:" 15 50 8 \
+ "1" "Añadir registro" \
+ "2" "Eliminar registro por nombre" \
+ "3" "Buscar" \
+ "4" "Listar" \
+ "5" "Ordenar" \
+ "6" "Borrar agenda" \
+ "7" "Modificar registro" \
+ "8" "Salir" 3>&1 1>&2 2>&3)
+ # Evaluar la opción seleccionada y segun que opcion elige
+el usuario realizar la acción correspondiente
+ case $opcion in
+ 1)
+ add_record
+Sergio Sánchez Martín Grado: ASIR
+Práctica "Servidores DHCP y DNS con Ubuntu Server"
+Administración de Sistemas Operativos
+2º Administración De Sistemas Informáticos en Red
+ ;;
+ 2)
+ # Solicitar al usuario que introduzca el nombre que
+quiere eliminar
+ nombre_eliminar=$(whiptail --inputbox "Introduce el
+nombre a eliminar:" 10 50 3>&1 1>&2 2>&3)
+ # Utilizar sed para eliminar la línea que contiene
+el nombre proporcionado
+ sed -i "/$nombre_eliminar/d" agenda.txt
+ ;;
+ 3)
+ # Solicitar al usuario que introduzca el término de
+búsqueda
+ termino=$(whiptail --inputbox "Introduce el término
+de búsqueda:" 10 50 3>&1 1>&2 2>&3)
+ # Realizar una búsqueda en el archivo y mostrar los
+resultados en un cuadro de mensaje
+ resultados=$(grep -i "$termino" agenda.txt)
+ whiptail --msgbox "Resultados de
+búsqueda:\n$resultados" 15 50
+ ;;
+ 4)
+ # Verificar si el archivo agenda.txt existe y
+mostrar su contenido en un cuadro de mensaje
+ if [ -f "agenda.txt" ]; then
+ contenido=$(cat agenda.txt)
+whiptail --msgbox "Contenido de
+agenda.txt:\n$contenido" 15 50
+ else
+ whiptail --msgbox "El archivo agenda.txt no
+existe." 10 50
+ fi
+ ;;
+ 5)
+ # Ordenar alfabéticamente el contenido del archivo
+agenda.txt
+ sort -o agenda.txt agenda.txt
+ whiptail --msgbox "Registros ordenados
+alfabéticamente." 10 50
+ ;;
+ 6)
+ # Borrar el archivo agenda.txt
+ rm agenda.txt
+ whiptail --msgbox "Agenda borrada." 10 50
+ ;;
+ 7)
+Sergio Sánchez Martín Grado: ASIR
+Práctica "Servidores DHCP y DNS con Ubuntu Server"
+Administración de Sistemas Operativos
+2º Administración De Sistemas Informáticos en Red
+ # Solicitar al usuario que introduzca el nombre a
+modificar y el nuevo nombre
+ nombre_modificar=$(whiptail --inputbox "Introduce
+el nombre a modificar:" 10 50 3>&1 1>&2 2>&3)
+ nuevo_nombre=$(whiptail --inputbox "Introduce el
+nuevo nombre:" 10 50 3>&1 1>&2 2>&3)
+ # Utilizar sed para reemplazar el nombre antiguo
+con el nuevo en el archivo agenda.txt
+ sed -i "s/$nombre_modificar/$nuevo_nombre/g"
+agenda.txt
+ ;;
+ 8)
+ # Salir del script
+ exit 0
+ ;;
+ *)
+ # Mostrar un mensaje de error si la opción no es
+válida
+ whiptail --msgbox "Opción no válida. Inténtalo de
+nuevo." 10 50
+ ;;
+ esac
+ done
+}
+# Llamamos a la función para poder gestionar la agenda
+manage_agenda

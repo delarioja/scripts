@@ -1,0 +1,16 @@
+#!/bin/bash
+echo Num params $#
+echo El echo anterior cómo ha terminado? no-news-good-news: $?
+echo $@
+for i in $@; do
+	echo "en for: $i"
+	shift
+done
+# observar a continuación el $1 constante y el shift
+echo El primer parámetro recibido es $1
+shift
+echo El segundo parámetro recibido es $1
+shift
+echo El tercer parámetro recibido es $1
+
+echo $@

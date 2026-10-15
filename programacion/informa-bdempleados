@@ -1,0 +1,39 @@
+#!/bin/bash
+
+while getopts "m:a:" opcion; do
+    #OPCION=$1 #Donde $1 puede ser -m o -a
+    opcion=$1
+    case "$opcion" in
+    -m)
+        NUMEMP=$(cat bdempleados | grep $2 | cut -d":" -f1)
+        NOMBRE=$(cat bdempleados | grep $2 | cut -d":" -f2)
+        APELLIDO=$(cat bdempleados | grep $2 | cut -d":" -f3)
+        DNI=$(cat bdempleados | grep $2 | cut -d":" -f4)
+        SUELDO=$(cat bdempleados | grep $2 | cut -d":" -f5)
+        PUESTO=$(cat bdempleados | grep $2 | cut -d":" -f6)
+        clear
+        echo "N� Empleado NOMBRE APELLIDO DNI PUESTO SUELDO"
+        echo "$NUMEMP $NOMBRE $APELLIDO $DNI $PUESTO $SUELDO"
+        ;;
+
+    -a)
+        NOMBRE=$(cat bdempleados | grep $2 | cut -d":" -f2)
+        APELLIDO=$(cat bdempleados | grep $2 | cut -d":" -f3)
+        DNI=$(cat bdempleados | grep $2 | cut -d":" -f4)
+        SUELDO=$(cat bdempleados | grep $2 | cut -d":" -f5)
+        PUESTO=$(cat bdempleados | grep $2 | cut -d":" -f6)
+        case $PUESTO in
+        Ingeniero) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 800 "*" 2) ;;
+        Director) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 1500 "*" 2) ;;
+        Peon) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 500 "*" 2) ;;
+        "Jefe Produccion") SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 754 "*" 2) ;;
+        esac
+        clear
+        echo "NOMBRE APELLIDO DNI SUELDO MES SUELDO ANUAL"
+        echo "$NOMBRE $APELLIDO $DNI $SUELDO $SUELDO_ANUAL"
+        ;;
+    *)
+        echo "Oye te has equivocado de opcion, solo puedes elegir o -m o -a"
+        ;;
+    esac
+done

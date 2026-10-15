@@ -1,0 +1,40 @@
+# Consideraciones:
+# Ahora MariaDB y PrestaShop compartirán la red del host, así que puedes conectar PrestaShop a MariaDB usando 127.0.0.1 en DB_SERVER.
+# No necesitas definir redes en docker-compose.yml, ya que la red es la del sistema operativo.
+# No puedes mapear puertos con ports:, porque los servicios ya están accesibles directamente en los puertos que usan por defecto en el host.
+# Si otro servicio en el host está usando los mismos puertos (por ejemplo, MySQL o Apache), puede haber conflictos.
+services:
+  db:
+    image: mariadb:11.4
+    container_name: prestashop_db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+    volumes:
+      - db_data:/var/lib/mysql
+    network_mode: host  # Usa la red del host directamente
+
+  prestashop:
+    image: prestashop/prestashop:latest
+    container_name: prestashop_app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_SERVER: 127.0.0.1  # La base de datos estará en localhost
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWORD: prestashop
+      PS_DEV_MODE: 1
+      PS_INSTALL_AUTO: 1
+      PS_ERASE_DB: 0
+    volumes:
+      - prestashop_data:/var/www/html
+    network_mode: host  # Usa la red del host directamente
+
+volumes:
+  db_data:
+  prestashop_data:

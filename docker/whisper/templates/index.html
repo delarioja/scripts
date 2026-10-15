@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisper Transcriber</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Whisper Transcriber</h1>
+        <form id="transcribe-form">
+            <label for="folder_path">Carpeta de archivos MP3:</label>
+            <input type="text" id="folder_path" name="folder_path" required>
+
+            <label for="model">Modelo:</label>
+            <select id="model" name="model">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+            </select>
+
+            <label for="language">Idioma:</label>
+            <select id="language" name="language">
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+            </select>
+
+            <button type="submit">Transcribir</button>
+        </form>
+
+        <div id="progress">
+            <h2>Progreso:</h2>
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <pre id="progress-text"></pre>
+        </div>
+
+        <div id="results">
+            <h2>Archivos Generados:</h2>
+            <ul id="file-list"></ul>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

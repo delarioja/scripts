@@ -1,0 +1,14 @@
+#!/bin/bash
+# Shell Script para instalar atom en Ubuntu
+# versión para 20.04 o posterior
+# Fernando Barcina - Enero-2021
+wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" | sudo tee /etc/apt/sources.list.d/atom.list
+sudo apt update
+sudo apt install -y atom
+#apm install activate-power-mode dash-ui dash-syntax atom-material-ui bash-bang-syntax
+#apm install atom-i18n atom-bash-snippets minimap pigments linter atom-beautify
+# instalar temas dash-ui dash-syntax y apm install activate-power-mode
+# https://atom.io/themes/atom-material-ui
+# https://atom.io/themes/bash-bang-syntax
+# y paquetes: atom-i18n atom-bash-snippets minimap pigments linter atom-beautify

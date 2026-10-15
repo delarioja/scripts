@@ -1,0 +1,86 @@
+#!/bin/bash -x
+
+agenda="./agenda.txt"
+
+function anadirRegistro() {
+  ./scripts/addagenda.sh
+}
+
+function checkAgenda() {
+  if [[ ! -e $agenda ]]; then
+    echo "ERROR: El fichero agenda.txt no existe" && exit 1
+  fi
+}
+
+function eliminarRegistro() {
+  echo "Eliminar Registro"
+  checkAgenda
+  read -p "Introduzca el nombre a eliminar: " -a nombreEliminar
+  sed -i "/^$nombreEliminar/d" $agenda
+  #también podría ser grep -v $nombreEliminar $agenda > archivo.tmp ; mv archivo.tmp $agenda
+  cat $agenda
+}
+
+function buscarRegistro() {
+  echo "Buscar Registro"
+  checkAgenda
+  read -p "Introduzca el término a bucar: " -a terminoBusqueda
+  grep -in "$terminoBusqueda" $agenda
+}
+
+function listarRegistro() {
+  echo "Listar Registro"
+  checkAgenda
+  cat $agenda
+}
+
+function ordenarRegistro() {
+  echo "Ordenar Registro"
+  checkAgenda
+  sort -k 1 -k 2 $agenda >> ./agendaCOPIA.txt
+  mv ./agendaCOPIA.txt $agenda
+  cat $agenda
+}
+
+function borrarRegistro() {
+  echo "Borrar Registro completo de agenda.txt"
+  checkAgenda
+  #read -p "¿Está segur@ que desea borrar el archivo agenda.txt?" -a SN
+  #if [[ $SN=="S" ]]; then
+    rm $agenda
+    echo "Archivo borrado"
+  #fi
+}
+
+function modificarRegistro() {
+  echo "modificarRegistro"
+  checkAgenda
+  read -p "Introduzca el término a modificar: " -a terminoModificar
+  read -p "Introduzca el nuevo término: " -a terminoNuevo
+  sed -i "s/$terminoModificar/$terminoNuevo/g" $agenda
+  cat $agenda
+}
+
+
+# MENU PRINCIPAL y estructura de comportamiento
+echo -e "   1. Añadir registro."
+echo -e "   2. Eliminar registro."
+echo -e "   3. Buscar."
+echo -e "   4. Listar."
+echo -e "   5. Ordenar."
+echo -e "   6. Borrar."
+echo -e "   7. Modificar registro."
+read -p "   Elija opción: " -a opcionMenu
+
+case $opcionMenu in
+  1 ) ./scripts/addagenda.sh;;
+  2 ) eliminarRegistro;;
+  3 ) buscarRegistro;;
+  4 ) listarRegistro;;
+  5 ) ordenarRegistro;;
+  6 ) borrarRegistro;;
+  7 ) modificarRegistro;;
+  * ) echo "   Opción no válida" && exit 1;;
+esac
+
+exit

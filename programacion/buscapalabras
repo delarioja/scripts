@@ -1,0 +1,31 @@
+#!/bin/bash
+#solución con 1 bucle y sin tener en cuenta que se puedan repetir en el fichero de palabras
+#comprobar que los ficheros existen
+#if ! [ -f "$1" ] || ! [ -f "$2" ]; then
+if [ ! -f "$1" -o ! -f "$2" ]; then
+  read -p "Los ficheros no existen. ¿Quieres que los descargue? (Y/n): " tecla
+  exp=[Yy]
+  if [[ "$tecla" =~ "$exp" || -z "$tecla" ]]; then
+    wget https://delarioja.org/scripts/programacion/palabras.txt
+    wget https://delarioja.org/scripts/programacion/citaQuijote.txt
+    fichero_palabras=palabras.txt
+    fichero_texto=citaQuijote.txt
+  else
+    exit 1
+  fi
+else
+  fichero_palabras=$1
+  fichero_texto=$2
+fi
+
+touch contar.txt
+#recorrer el primer fichero línea por línea que es lo mismo que palabra por palabra
+while read linea; do
+
+  contar=$(grep -iw $linea $fichero_texto | wc -l)
+  # o también: contar=$(grep -iwc $linea $fichero_texto)
+  # la -c cuenta, la -w asegura que es una palabra completa con espacios a los lados
+  echo $linea $contar >>contar.txt
+done <$fichero_palabras
+sort -k2 contar.txt
+rm contar.txt

@@ -1,0 +1,27 @@
+#!/bin/bash
+# ----
+if [[ ! -d $HOME/copia ]]; then
+mkdir $HOME/copia
+ 	echo -e "El directorio se ha creado en \e[1;34m$HOME/copia/\e[0m"
+fi
+# ------
+for i in $( find ./ -maxdepth 1 -type f ); do
+ 	if [[ -f "$HOME/copia/${i##*/}" ]]; then
+  		if [[ "$i" -nt "$HOME/copia/${i##*/}" ]]; then
+     			cp $i $HOME/copia/
+    			echo -e "El fichero \e[1;32m${i##*/}\e[0m se ha copiado"
+   		else
+    			echo -e "No se ha copiado el archivo \e[1;31m${i##*/}\e[0m, ya existe el archivo"
+ 	  	fi
+ 	else
+   		cp $i $HOME/copia/
+   		echo -e "El fichero \e[1;32m${i##*/}\e[0m se ha copiado correctamente."
+ 	fi
+done
+# ------
+for i in $( find . -maxdepth 1 -type d ); do
+ 	if [[ $i != "." ]]; then
+ 		echo -e "El directorio \e[1;34m$i\e[0m se ha encontrado"
+ 	fi
+done
+# ------

@@ -1,0 +1,33 @@
+##docker-compose.yml para que MariaDB y Joomla funcionen
+services:
+  joomla_db:
+    image: mariadb:noble
+    container_name: joomla_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: org
+      MYSQL_DATABASE: joomla
+      MYSQL_USER: joomlauser
+      MYSQL_PASSWORD: org
+    volumes:
+      - db_data:/var/lib/mysql
+
+  joomla:
+    image: joomla:php8.3-apache
+    container_name: joomla_app
+    restart: always
+    depends_on:
+      - joomla_db
+    ports:
+      - "8080:80"
+    environment:
+      JOOMLA_DB_HOST: joomla_db
+      JOOMLA_DB_NAME: joomla
+      JOOMLA_DB_USER: joomlauser
+      JOOMLA_DB_PASSWORD: org
+    volumes:
+      - joomla_data:/var/www/html
+
+volumes:
+  db_data:
+  joomla_data:

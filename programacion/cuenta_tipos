@@ -1,0 +1,62 @@
+#!bin/bash
+cont=0
+cont1=0
+cont2=0
+cont3=0
+
+clasificar_directorio() {
+    local directorio="$1"
+    local entrada
+    local ruta
+    local var1
+    local var2
+
+    for entrada in $(ls "$directorio"); do
+        if [ "$directorio" = "./" ]; then
+            ruta="$entrada"
+        else
+            ruta="$directorio$entrada"
+        fi
+
+        var1=$(file "$ruta" | grep -o special) #verifica si es un fichero de dispositivo
+        var2=$(file "$ruta" | grep -o text)   #verifica si es un fichero
+
+        case $var2 in
+        text)
+            t="$t$entrada,"
+            cont=$(($cont + 1))
+            ;;
+        esac
+
+        case $var1 in
+        special)
+            dv="$dv$entrada,"
+            cont1=$(($cont1 + 1))
+            ;;
+        esac
+
+        if [ -d "$ruta" ]; then
+            d="$d$entrada,"
+            cont2=$(($cont2 + 1))
+        elif [ -x "$ruta" -a "$var2" == "text" ]; then
+            e="$e$entrada,"
+            cont3=$(($cont3 + 1))
+        fi
+    done
+
+    echo "La clasificacion de los ficheros del directortio $directorio es:"
+    echo "Hay $cont ficheros de texto: $t"
+    echo "Hay $cont1 ficheros de dispositivo: $dv"
+    echo "Hay $cont2 directorios: $d"
+    echo "Hay $cont3 ficheros ejecutables: $e"
+}
+
+if [ $# -gt 1 ]; then
+
+    echo "Solo puedes ingresar un parametro o ninguno para listar el fichero actual."
+
+elif [ $# -eq 1 ]; then
+    clasificar_directorio "$1"
+else
+    clasificar_directorio "./"
+fi

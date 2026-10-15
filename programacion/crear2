@@ -1,0 +1,32 @@
+#!/bin/bash
+#Compruebo si no existe el archivo
+if [ $# -eq 0 ]; then
+    nuevo="fichero_vacio"
+elif ! [ -f $1 ]; then
+    nuevo=$1
+else #Instrucciones si sí que existe el fichero
+    echo "Ya existe ese fichero"
+    #también podría ser un while con 2 condiciones, no llegar a 10 y no exista
+    for (( i = 1; i < 10; i++)); do
+      nuevo=$1$i
+      #Compruebo si no existe el archivo
+      if ! [ -f $nuevo ]; then
+        break
+      fi
+    done
+    if [[ $i -eq 10 ]]; then
+      echo "No se creará el fichero porque ya existe incluso con sufijos del 1 al 9."
+      exit 1
+    fi
+fi
+#Instrucción si se pasan los dos parámetros
+if [ $# -eq 2 ]; then
+  dd if=/dev/zero of="$nuevo" bs="$2" count=1024
+  echo "Se ha creado el fichero $nuevo"
+#Instrucción si sólo se pasa el nombre del fichero o ninguno="fichero_vacio"
+elif [ $# -le 1 ]; then
+  dd if=/dev/zero of="$nuevo" bs=1024K count=1
+  echo "Se ha creado el fichero $nuevo"
+else
+  echo "Sólo admite parámetro nombre fichero y parámetro tamaño en bytes"
+fi

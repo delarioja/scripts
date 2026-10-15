@@ -1,0 +1,51 @@
+##docker-compose.yml para que MariaDB y PrestaShop con IP estáticas
+
+networks:
+  prestashop_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
+services:
+  db:
+    image: mariadb:lts
+    container_name: prestashop_db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      prestashop_net:
+        ipv4_address: 192.168.1.100
+
+  prestashop:
+    image: prestashop/prestashop:latest
+    container_name: prestashop_app
+    restart: always
+    depends_on:
+      - prestashop_db
+    ports:
+      - "8080:80"
+    environment:
+      DB_SERVER: 192.168.1.100
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWORD: prestashop
+      PS_DOMAIN: localhost:8080
+      PS_INSTALL_AUTO: 1 #instala automáticamente PrestaShop si la carpeta está vacía
+      PS_ERASE_DB: 0 #evita borrar la base de datos en cada arranque
+      PS_DEV_MODE: 1 #activa el modo desarrollo
+    volumes:
+      - prestashop_data:/var/www/html
+    networks:
+      prestashop_net:
+        ipv4_address: 192.168.1.101
+
+volumes:
+  db_data:
+  prestashop_data:

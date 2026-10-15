@@ -1,0 +1,8 @@
+#!/bin/bash
+# Fernando Barcina
+# Modo de uso
+# lee-ficheroXlineas2
+export IFS=$'\n' #si comentas esta línea sería por palabras
+for LINEA in $(cat $0); do
+    echo "Línea: $LINEA"
+done

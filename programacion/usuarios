@@ -1,0 +1,32 @@
+#!/bin/bash -x 
+clear
+usu=$1
+usuario=`grep "$usu:" /etc/passwd`
+
+if [ ! -z $usuario ]
+then
+	echo "EL USUARIO $1 YA EXISTE"
+else
+	#Comprueba si los grupos ya existen o no
+	shift #pierdo $1 (usuario) y solo me quedo con los grupos
+	for grupo in $@ #En $@ o en $* tendre todos los grupos pasados
+	do
+		grupos=`grep "$grupo:" /etc/group`
+		if [ -z $grupos ]
+        	then
+                	groupadd $grupo
+		fi
+	done
+	#FIN de comprobar grupos
+	#Creamos el número de usuarios deseados
+	read -p "¿Cuantos usuarios desea crear? " numusu
+
+	i=1
+	grupos=`echo $* | tr " " ","`
+	while [ $i -le $numusu ]
+	do
+		useradd -m -s /bin/bash $usu$i -G $grupos
+		echo -e "$usu$i\n$usu$i" | passwd $usu$i
+		i=$(($i+1)) 
+	done
+fi

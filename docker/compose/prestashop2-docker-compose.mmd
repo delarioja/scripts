@@ -1,0 +1,48 @@
+---
+title: Docker Compose PrestaShop con IP estaticas
+config:
+  theme: base
+  look: handDrawn
+  themeVariables:
+    background: '#f6f3ea'
+    primaryColor: '#d9e8f5'
+    primaryTextColor: '#1f2937'
+    primaryBorderColor: '#315a72'
+    lineColor: '#315a72'
+    secondaryColor: '#f4d7a1'
+    tertiaryColor: '#d8e7d0'
+---
+flowchart LR
+    browser[Usuario<br/>localhost:8080]
+
+    subgraph net[Red prestashop_net<br/>192.168.1.0/24]
+        direction LR
+        db[(MariaDB<br/>prestashop_db<br/>192.168.1.100)]
+        app[PrestaShop<br/>prestashop_app<br/>192.168.1.101]
+    end
+
+    dbv[(Volumen db_data)]
+    appv[(Volumen prestashop_data)]
+    imgdb[Mariadb lts]
+    imgapp[prestashop/prestashop latest]
+
+    browser -->|8080:80| app
+    app -->|DB_SERVER 192.168.1.100| db
+    dbv -->|/var/lib/mysql| db
+    appv -->|/var/www/html| app
+    imgdb -. image .-> db
+    imgapp -. image .-> app
+
+    classDef user fill:#f4d7a1,stroke:#9a6700,color:#3b2f1b,stroke-width:2px;
+    classDef network fill:#e8efe3,stroke:#5a7d4d,color:#24311d,stroke-width:2px;
+    classDef database fill:#d9e8f5,stroke:#315a72,color:#163042,stroke-width:2px;
+    classDef app fill:#f8d9cc,stroke:#a6532f,color:#4a2415,stroke-width:2px;
+    classDef volume fill:#e6ddf5,stroke:#6a4c93,color:#2d1f42,stroke-width:2px;
+    classDef image fill:#f0f0f0,stroke:#666666,color:#222222,stroke-dasharray: 5 3;
+
+    class browser user;
+    class net network;
+    class db database;
+    class app app;
+    class dbv,appv volume;
+    class imgdb,imgapp image;

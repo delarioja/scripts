@@ -1,0 +1,27 @@
+#!/bin/bash
+# Fernando Barcina
+# Modo de uso
+# agregar_path /path/a/agregar
+if [ $# -ne 1 ]; then
+echo -e "Modo de uso:\n agregar_path /path/a/agregar "
+else
+ read -p "¿Quieres con export probar en subshell? [Y/n]:" yn
+ if echo $yn | grep -x -q "[Yy]\+"; then
+   export PATH=$PATH:$1
+   echo "Este es el nuevo path: $PATH en el nivel shell $SHLVL"
+   echo 'Cargando subshell...prueba un echo $PATH $SHLVL, verás que el cambio permanece todavía'
+   bash
+   echo 'PATH no modificado. Prueba con echo $PATH'
+ else
+   PATH=$PATH:$1
+   echo "Este es el nuevo path: $PATH"
+   read -p "¿Quieres que persista en nuevas sesiones bash y en la actual? [Y/n]:" yn
+   exp='[Yy]'
+   if [[ "$yn" =~ $exp ]]; then
+     echo "Modificando .bashrc"
+     echo 'PATH=$PATH:'$1 >>  ~/.bashrc
+     source ~/.bashrc
+     echo 'PATH modificado persistentemente. Prueba con echo $PATH: '$PATH
+   fi
+ fi
+fi

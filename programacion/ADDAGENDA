@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#Añade registros de personas en un fichero. Para entrada solicitar nombre, dirección y teléfono.
+#Datos separados por tabuladores, de cada persona se añadirán en una sóla línea al archivo
+#agenda.txt, El programa seguirá solicitando datos hasta que se introduzca FIN como nombre.
+
+echo -n "Introduce el nombre:"
+read nombre
+if [ $nombre = "FIN" ]
+then
+  cat agenda.txt
+  exit 0
+fi
+echo -n "Introduce la direccion:"
+read direccion
+#Otra manera de ponerlo
+read -p "Introduce el teléfono:" telefono
+echo -e "$nombre\t$direccion\t$telefono">>agenda.txt
+./ADDAGENDA;

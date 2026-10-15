@@ -1,0 +1,79 @@
+[global_config]
+  enabled_plugins = LaunchpadBugURLHandler, LaunchpadCodeURLHandler, APTURLHandler, TerminalShot, TerminatorThemes
+  save_layout = True
+[keybindings]
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"
+    font = Ubuntu Mono 13
+    foreground_color = "#ffffff"
+    use_system_font = False
+    bold_is_bright = True
+  [[claro]]
+    background_color = "#fdf6e3"
+    cursor_color = "#aaaaaa"
+    font = Ubuntu Mono 13
+    foreground_color = "#000000"
+    use_system_font = False
+    bold_is_bright = True
+  [[claro2]]
+    background_color = "#f6f5f4"
+    cursor_color = "#aaaaaa"
+    font = Monospace 13
+    foreground_color = "#000000"
+    use_system_font = False
+  [[darkmatrix]]
+    background_color = "#070c0e"
+    cursor_color = "#9fa86e"
+    foreground_color = "#3e5715"
+    palette = "#091013:#006536:#6fa64c:#7e8000:#2c9a84:#452d53:#114d53:#006536:#333333:#00733d:#90d762:#e2e500:#46d8b8:#4a3059:#12545a:#006536"
+    background_image = None
+  [[iceberg-light]]
+    background_color = "#e8e9ec"
+    cursor_color = "#33374c"
+    foreground_color = "#33374c"
+    palette = "#dcdfe7:#cc517a:#668e3d:#c57339:#2d539e:#7759b4:#3f83a6:#33374c:#8389a3:#cc3768:#598030:#b6662d:#22478e:#6845ad:#327698:#262a3f"
+    background_image = None
+  [[matrix]]
+    background_color = "#0f191c"
+    cursor_color = "#384545"
+    foreground_color = "#426644"
+    palette = "#0f191c:#23755a:#82d967:#ffd700:#3f5242:#409931:#50b45a:#507350:#688060:#2fc079:#90d762:#faff00:#4f7e7e:#11ff25:#c1ff8a:#678c61"
+    background_image = None
+  [[Ubuntu]]
+    background_color = "#300a24"
+    cursor_color = "#bbbbbb"
+    foreground_color = "#eeeeec"
+    background_image = None
+  [[Breeze]]
+    background_color = "#31363b"
+    cursor_color = "#eff0f1"
+    foreground_color = "#eff0f1"
+    palette = "#31363b:#ed1515:#11d116:#f67400:#1d99f3:#9b59b6:#1abc9c:#eff0f1:#7f8c8d:#c0392b:#1cdc9a:#fdbc4b:#3daee9:#8e44ad:#16a085:#fcfcfc"
+    background_image = None
+  [[Snazzy]]
+    background_color = "#242424"
+    cursor_color = "#97979b"
+    cursor_color_fg = False
+    font = Monospace 13
+    foreground_color = "#eff0eb"
+    palette = "#282a36:#ff5c57:#5af78e:#f3f99d:#57c7ff:#ff6ac1:#9aedfe:#f1f1f0:#686868:#ff5c57:#5af78e:#f3f99d:#57c7ff:#ff6ac1:#9aedfe:#eff0eb"
+    use_system_font = False
+  [[Juicy]]
+    background_color = "#212121"
+    cursor_color = "#fcfcfc"
+    cursor_color_fg = False
+    font = Monospace 13
+    foreground_color = "#fcfcfc"
+    palette = "#2e3436:#ff0945:#1aff81:#fff64a:#2bf1ff:#7b68ee:#98f4ff:#d3d7cf:#555753:#ff0945:#1aff81:#fff64a:#2bf1ff:#7b68ee:#98f4ff:#eeeeec"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+      profile = default
+[plugins]

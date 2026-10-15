@@ -1,0 +1,15 @@
+#!/bin/bash
+#ejecutamos el programa saludos de la siguiente manera:  ./saludos.sh Nombre (la variable $1 será tu nombre)
+#echo -e  interpreta caracteres con \ (ejemplo \t que es el tabulador o \n que es el salto de linea)
+
+HORA=$(date +%H) # Meto en la variable hora el primer dígito de la hora actual del sistema
+if [ $HORA -ge 8 -a $HORA -lt 14 ]      # Comparo si la hora está entre las 8h y las 14h
+then
+  echo -e '\e[1;33m🌞 Buenos días 🌞\e[0m'    # Si es así, muestra el texto Buenos días en color amarillo
+  #echo -e "$1\tBuenos\tdias"           #También podría haberse puesto así
+elif [ $HORA -ge 14 -a $HORA -lt 19 ]   # Comparo si la hora está entre las 14h y las 19h
+then
+  echo -e '\e[0;32m🌇 Buenas tardes\e[0m'  # Si es así, muestra el texto Buenas tardes en color verde
+else                                    # Si no es ninguno de los otros casos
+  echo -e '\e[0;37m🌙 Buenas noches\e[0m'  # Saldrá el texto Buenas noches en color gris
+fi

@@ -1,0 +1,16 @@
+#!/bin/bash
+clear
+if [ ! -d $HOME/copia ]; then 
+  mkdir $HOME/copia
+fi
+
+for i in *
+do
+  if [ -f $HOME/copia/$i ]; then
+    echo -e "\e[33m ¡$i ya existe en $HOME/copia!\e[0m"
+  elif [ -d $i ]; then
+    echo -e "\e[31m ¡$i es un directorio!\e[0m"
+  else
+    cp $i $HOME/copia/$i
+  fi
+done

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+cambia_nombre1() { 
+NEW_HOSTNAME=$(zenity --entry --title="Nuevo nombre del equipo" --text="¿Qué nuevo nombre desea?" --entry-text="tuNombreApellido-mv" 2>/dev/null)
+sed -i 's/127.0.1.1.*/127.0.1.1\t'"$NEW_HOSTNAME"'/g' /etc/hosts 
+echo $NEW_HOSTNAME > /etc/hostname
+reboot
+} 
+
+cambia_nombre2() { 
+NEW_HOSTNAME=$(zenity --entry --title="Nuevo nombre del equipo" --text="¿Qué nuevo nombre desea?" --entry-text="tuNombreApellido-mv" 2>/dev/null)
+sed -i 's/127.0.1.1.*/127.0.1.1\t'"$NEW_HOSTNAME"'/g' /etc/hosts 
+echo $NEW_HOSTNAME > /proc/sys/kernel/hostname 
+echo $NEW_HOSTNAME > /etc/hostname 
+}
+
+cambia_nombre3() { 
+NEW_HOSTNAME=$(zenity --entry --title="Nuevo nombre del equipo" --text="¿Qué nuevo nombre desea?" --entry-text="tuNombreApellido-mv" 2>/dev/null)
+sed -i 's/127.0.1.1.*/127.0.1.1\t'"$NEW_HOSTNAME"'/g' /etc/hosts 
+hostnamectl set-hostname $NEW_HOSTNAME
+} 
+
+# defino variables
+RED='\033[0;41;30m'
+STD='\033[0;0;39m'
+
+if [ ! -f /home/delarioja/Escritorio/borra-desactivar.txt ]; then
+    exit
+fi
+if [ "$EUID" -ne 0 ]
+  then echo -e "${RED}Por favor ejecútame como usuario root (Please run as root)${STD}"
+
+  exit
+fi
+
+# ----------------------------------------------
+# Trap CTRL+C, CTRL+Z and quit singles
+# ---------------------------------------------
+trap '' SIGINT SIGQUIT SIGTSTP
+zenity --info --text="Programa iniciador máquinas virtuales." --title="Autor: Fernando Barcina"
+OPCION=$(zenity --list --width=500 --height=360 --title "Programa iniciador máquinas virtuales" --text "Elige opción: " --radiolist --column "" --column "¿Qué quieres hacer?" FALSE "Cambiar el nombre del host con reinicio" FALSE "Cambiar el nombre del host sin reinicio antiguo" TRUE "Cambiar el nombre del host sin reinicio new way" FALSE "Salir" 2>/dev/null )
+
+case $OPCION in
+"Cambiar el nombre del host con reinicio" ) cambia_nombre1 ;;
+"Cambiar el nombre del host sin reinicio antiguo" ) cambia_nombre2 ;;
+"Cambiar el nombre del host sin reinicio new way" ) cambia_nombre3 ;;
+"Salir" ) exit 0 ;;
+*) zenity --warning --text="Error" && sleep 2
+esac
+

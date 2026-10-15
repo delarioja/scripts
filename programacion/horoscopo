@@ -1,0 +1,28 @@
+#!/bin/bash
+# Solo vamos a aceptar un argumento
+if [ $# -ne 1 ]
+then
+    echo "$0 Error: solo se admite un argumento"
+    echo "Uso: $0 año"
+    exit 1
+fi
+
+year=$1
+
+# El argumento que nos aporte tiene que ser un número entero positivo
+es_numero='^[0-9][0-9][0-9][0-9]$' # Expresión regular que vamos a utilizar para comprobar que el argumento es un entero positivo
+
+if ! $year =~ $es_numero # =~ se usa para comparar cadenas con expresiones regulares
+then
+    echo "Error: $1 no es un número entero positivo de cuatro cifras"
+    echo "Uso: $0 año"
+    exit 1
+fi
+
+rest=$(( year % 12 ))
+
+horoscopo=("El Mono" "El Gallo" "El Perro" "El Cerdo" "La Rata" "El Buey" "El Tigre" "El Conejo" "El Dragón" "La Serpiente" "El Caballo" "La Cabra")
+
+y_chino=${horoscopo[$rest]}
+
+echo "Si naciste en el $year te corresponde $y_chino según el horóscopo chino" 

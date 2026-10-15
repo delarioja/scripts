@@ -1,0 +1,50 @@
+#!/bin/bash
+cat >bdreparto <<EOF
+N_Empleado:Nombre:Apellido:DNI:SueldoMensual(euros):Puesto
+100:Neo:Elegido:16588099D:1660:Director
+101:Trinity:Alonso:16652899G:1380:Actor principal
+102:Niobe:Romay:23422161L:966:Guionista
+103:Morfeo:Navarro:33288715H:1200:Actor
+104:Persefone:Gasol:56376544K:2100:Productor
+EOF
+
+# trabaja por defecto con el fichero bdreparto
+while getopts "m:a:" opcion; do
+    # Donde $1 puede ser -m o -a
+    opcion=$1
+    case "$opcion" in
+    -m)
+        NUMEMP=$(cat bdreparto | grep $2 | cut -d":" -f1)
+        #otra manera de hacerlo:
+        NOMBRE=$(grep $2 bdreparto | cut -d":" -f2)
+        APELLIDO=$(cat bdreparto | grep $2 | cut -d":" -f3)
+        DNI=$(cat bdreparto | grep $2 | cut -d":" -f4)
+        SUELDO=$(cat bdreparto | grep $2 | cut -d":" -f5)
+        PUESTO=$(cat bdreparto | grep $2 | cut -d":" -f6)
+        clear
+        echo -e "N_Empleado\tNOMBRE\tAPELLIDO\tDNI\tPUESTO\tSUELDO"
+        echo -e "$NUMEMP\t$NOMBRE\t$APELLIDO\t$DNI\t$PUESTO\t$SUELDO"
+        ;;
+
+    -a)
+        NOMBRE=$(cat bdreparto | grep $2 | cut -d":" -f2)
+        APELLIDO=$(cat bdreparto | grep $2 | cut -d":" -f3)
+        DNI=$(cat bdreparto | grep $2 | cut -d":" -f4)
+        SUELDO=$(cat bdreparto | grep $2 | cut -d":" -f5)
+        PUESTO=$(cat bdreparto | grep $2 | cut -d":" -f6)
+        case $PUESTO in
+        Director) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 900 "*" 2) ;;
+        Productor) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 1500 "*" 2) ;;
+        "Actor principal") SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 854 "*" 2) ;;
+        Actor) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 700 "*" 2) ;;
+        Guionista) SUELDO_ANUAL=$(expr $SUELDO "*" 12 + 500 "*" 2) ;;
+        esac
+        clear
+        echo "NOMBRE APELLIDO DNI SUELDO MES SUELDO ANUAL"
+        echo "$NOMBRE $APELLIDO $DNI $SUELDO euros $SUELDO_ANUAL euros"
+        ;;
+    *)
+        echo "Oye te has equivocado de opci�n, solo puedes elegir o -m o -a"
+        ;;
+    esac
+done

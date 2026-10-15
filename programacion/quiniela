@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Quiniela con resultados aleatorios alineando los resultados iguales
+echo "Resultado aleatorio de la quiniela:"
+for (( i=1; i<15 ; i++ )); #bucle para realizar las sentencias dentro de él para obtener los 14 resultados de la quiniela
+do
+  resultado=$(($RANDOM%3)) #Generamos un número aleatorio de 0 a2
+  if [ $resultado -eq 1 ]
+  then
+    echo "$i.- $resultado"
+  elif [ $resultado -eq 0 ]
+  then
+    echo "$i.-  X"
+  else
+    echo "$i.-   $resultado"
+  fi
+done

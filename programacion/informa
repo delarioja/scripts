@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Trabaja por defecto con el fichero bdreparto
+while getopts "m:a:" opcion
+do
+  # Donde $1 puede ser -m o -a
+  opcion=$1
+  case "$opcion" in
+    -m)
+      NUMEMP=$(grep $2 bdreparto | cut -d":" -f1)
+      # Otra manera de hacerlo:
+      NOMBRE=`grep $2 bdreparto | cut -d":" -f2`
+      APELLIDO=`cat bdreparto | grep $2 | cut -d":" -f3`
+      DNI=`cat bdreparto | grep $2 | cut -d":" -f4`
+      SUELDO=`cat bdreparto | grep $2 | cut -d":" -f5`
+      PUESTO=`cat bdreparto | grep $2 | cut -d":" -f6`
+
+      clear
+      echo -e "N_Empleado\tNOMBRE\tAPELLIDO\tDNI\tPUESTO\tSUELDO"
+      echo -e "$NUMEMP\t$NOMBRE\t$APELLIDO\t$DNI\t$PUESTO\t$SUELDO"
+      ;;
+
+    -a)
+      NOMBRE=`cat bdreparto | grep $2 | cut -d":" -f2`
+      APELLIDO=`cat bdreparto | grep $2 | cut -d":" -f3`
+      DNI=`cat bdreparto | grep $2 | cut -d":" -f4`
+      SUELDO=`cat bdreparto | grep $2 | cut -d":" -f5`
+      PUESTO=`cat bdreparto | grep $2 | cut -d":" -f6`
+
+      case $PUESTO in
+        Director)
+          SUELDO_ANUAL=`expr $SUELDO "*" 12 + 900 "*" 2`
+          ;;
+        Productor)
+          SUELDO_ANUAL=`expr $SUELDO "*" 12 + 1500 "*" 2`
+          ;;
+        "Actor principal")
+          SUELDO_ANUAL=`expr $SUELDO "*" 12 + 854 "*" 2`
+          ;;
+        Actor)
+          SUELDO_ANUAL=`expr $SUELDO "*" 12 + 700 "*" 2`
+          ;;
+        Guionista)
+          SUELDO_ANUAL=`expr $SUELDO "*" 12 + 500 "*" 2`
+          ;;
+      esac
+
+      clear
+      echo "NOMBRE APELLIDO DNI SUELDO MES SUELDO ANUAL"
+      echo "$NOMBRE $APELLIDO $DNI $SUELDO euros $SUELDO_ANUAL euros"
+      ;;
+
+    *)
+      echo "Oye te has equivocado de opción, solo puedes elegir o -m o -a"
+      ;;
+  esac
+done

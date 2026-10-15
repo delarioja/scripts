@@ -1,0 +1,49 @@
+# En la terminal, ejecuta: docker compose up -d
+# Abre en tu navegador: phpMyAdmin: http://localhost:8091 PrestaShop: http://localhost:8080
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: prestashop_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: org
+      MYSQL_DATABASE: prestashop
+      MYSQL_USER: prestashop
+      MYSQL_PASSWORD: org
+    #ports:
+    #  - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2.3
+    container_name: prestashop_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: org
+    ports:
+      - "8091:80"
+    depends_on:
+      - mysql
+
+  prestashop:
+    image: prestashop/prestashop:8.0
+    container_name: prestashop_app
+    restart: unless-stopped
+    environment:
+      DB_SERVER: mysql
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWORD: org
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+    volumes:
+      - prestashop_data:/var/www/html
+
+volumes:
+  mysql_data:
+  prestashop_data:

@@ -1,0 +1,127 @@
+#!/bin/bash
+#Menú principal del script
+menu_agenda=$(whiptail --title "######## Agenda # Menú principal ########" --menu "" 15 60 7 \
+"1)" "Añadir registro" \
+"2)" "Eliminar registro" \
+"3)" "Buscar" \
+"4)" "Listar" \
+"5)" "Ordenar" \
+"6)" "Borrar" \
+"7)" "Modificar registro"  3>&1 1>&2 2>&3)
+#Identifica que opción escoge el usuario
+if [ $? == 0 ]; then
+    if [ $menu_agenda == "1)" ]; then
+        #Pide que introduzcas el nombre, dirección y teléfono del contacto
+        nombre=$(whiptail --title "######## Agenda # Añadir registro ########" --nocancel --inputbox \
+        "\\nIntroduce un nombre" 10 60 3>&1 1>&2 2>&3)
+        direccion=$(whiptail --title "######## Agenda # Añadir registro ########" --nocancel --inputbox \
+        "\\nIntroduce una dirección" 10 60 3>&1 1>&2 2>&3)
+        telefono=$(whiptail --title "######## Agenda # Añadir registro ########" --nocancel --inputbox \
+        "\\nIntroduce un número de teléfono" 10 60 3>&1 1>&2 2>&3)
+        #Guarda los datos introducidos en el fichero agenda.txt y muestra que se han añadido correctamente
+        echo -e "$nombre\t$direccion\t$telefono" >> agenda.txt
+        echo "El registro se ha añadido correctamente" > texto1
+        whiptail --title "######## Agenda # Añadir registro ########" --textbox texto1 8 60
+
+        #Vuelve al menú principal de nuevo
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "2)" ]; then
+        #Pide que introduzcas el nombre del contacto que quieras eliminar
+        eliminar=$(whiptail --title "######## Agenda # Eliminar registro ########" --nocancel --inputbox \
+        "\\nIntroduce el nombre del registro que quieras eliminar" 10 60 3>&1 1>&2 2>&3)
+
+        #Comprueba que existe el contacto y lo elimina
+        grep "$eliminar" ./agenda.txt
+        if [ $? == 0 ]; then
+        sed -i "/$eliminar/d" ./agenda.txt
+
+        #Muestra si el contacto se ha eliminado correctamente o si ha habido algún error
+        echo "El registro se ha eliminado correctamente" > texto2
+        whiptail --title "######## Agenda # Eliminar registro ########" --textbox texto2 8 60
+        else
+        echo "Algo ha salido mal, comprueba que existe ese contacto e inténtalo de nuevo" > texto3
+        whiptail --title "######## Agenda # Eliminar registro ########" --textbox texto3 8 60
+        fi
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "3)" ]; then
+        #Pide que introduzcas un nombre de contacto a buscar
+        buscar=$(whiptail --title "######## Agenda # Buscar ########" --nocancel --inputbox \
+        "\\nIntroduce el nombre del registro que quieras buscar" 10 60 3>&1 1>&2 2>&3)
+
+        #Busca y muestra la línea con el nombre del contacto que hemos introducido
+        grep "$buscar" agenda.txt > buscar2
+        if [ $? == 0 ]; then
+        whiptail --title "######## Agenda # Buscar ########" --textbox buscar2 12 60
+        else
+        #Si el contacto no existe muestra un error
+        echo "El contacto introducido no existe." > texto4
+        whiptail --title "######## Agenda # Buscar ########" --textbox texto4 8 60
+        fi
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "4)" ]; then
+        #Guarda todos los registros en la variable listar y los muestra
+        cat agenda.txt > listar
+        if [ $? == 0 ]; then
+        whiptail --title "######## Agenda # Listar ########" --textbox listar 16 60
+        else
+        #Si la agenda está vacía muestra un error
+        echo "La agenda está vacía." > texto5
+        whiptail --title "######## Agenda # Listar ########" --textbox texto5 8 60
+        fi
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "5)" ]; then
+        #Guarda todos los registros en la variable ordenar, los ordena y los muestra
+        sort -d -f agenda.txt > ordenar
+        if [ $? == 0 ]; then
+        whiptail --title "######## Agenda # Ordenar ########" --textbox ordenar 16 60
+        else
+        #Si la agenda está vacía muestra un error
+        echo "La agenda está vacía." > texto6
+        whiptail --title "######## Agenda # Ordenar ########" --textbox texto6 8 60
+        fi
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "6)" ]; then
+        #Comprueba que existe el archivo agenda.txt y lo elimina
+        whiptail --title "######## Agenda # Borrar ########" --yesno "Se eliminará el archivo con todos los contactos \\n¿Quiere continuar?" 9 60
+        if [ $? == 0 ]; then
+            cat agenda.txt
+            if [ $? == 0 ]; then
+            rm agenda.txt
+            echo "La agenda se ha borrado correctamente." > texto7
+            whiptail --title "######## Agenda # Borrar ########" --textbox texto7 8 60
+            else
+            #Si el archivo agenda.txt no existe muestra un error
+            echo "No tienes ninguna agenda que borrar." > texto8
+            whiptail --title "######## Agenda # Borrar ########" --textbox texto8 8 60
+            fi
+        fi
+        bash agenda-whiptail
+
+    elif [ $menu_agenda = "7)" ]; then
+        #Pide que se introduzca el dato original y el dato por el que se quiere sustituir
+        original=$(whiptail --title "######## Agenda # Modificar un registro ########" --nocancel --inputbox \
+        "\\nIntroduce el dato actual que quieres modificar" 10 60 3>&1 1>&2 2>&3)
+        grep "$original" agenda.txt
+        if [ $? == 0 ]; then
+        nuevo=$(whiptail --title "######## Agenda # Modificar un registro ########" --nocancel --inputbox \
+        "\\nIntroduce el dato por el que quieras sustituirlo" 10 60 3>&1 1>&2 2>&3)
+        #El comando sed sustituye el valor viejo por el nuevo
+        sed -i "s/$original/$nuevo/g" agenda.txt
+        echo "El registro se ha actualizado correctamente." > texto9
+        whiptail --title "######## Agenda # Modificar un registro ########" --textbox texto9 8 60
+        else
+        #Si el registro original no existe, muestra un error
+        echo "Ese registro no existe." > texto10
+        whiptail --title "######## Agenda # Modificar un registro ########" --textbox texto10 8 60
+        fi
+        bash agenda-whiptail
+    fi
+else
+    clear
+    exit
+fi

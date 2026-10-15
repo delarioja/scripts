@@ -1,0 +1,9 @@
+#!/bin/bash
+# Fernando Barcina
+# Modo de uso
+# lee-ficheroXlineas
+# y así consigues que se lea a sí mismo
+while read i; do
+    echo "Línea: $i"
+    # Procesar $i (línea actual)
+done <$0

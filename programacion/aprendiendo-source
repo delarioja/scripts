@@ -1,0 +1,9 @@
+#!/bin/bash -x
+# Fernando Barcina
+# Modo de uso
+# invocar este programa con source desde otro y luego muestra las variables del entorno con env
+echo "Esta son las variables definidas: $dni $nombre: $nif"
+./definiendo-variables
+echo "Esta son las variables definidas: $dni $nombre: $nif"
+source definiendo-variables
+echo "Esta son las variables definidas: $dni $nombre: $nif"

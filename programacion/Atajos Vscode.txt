@@ -1,0 +1,8 @@
+Atajos Vscode: 
+    Alt + Shift + I: dar formato todo doc, para una parte: Ctrl+K Ctrl+F
+    Ctrl + Shift + P: comando -> formato
+    Tab para tabular y Shift+Tab para destabular
+    Alt + Ratón: añadir cursor (edición multicursor)
+    Ctrl + Shift + L: Reemplazar todas las ocurrencias de lo seleccionado
+    Ctrl + Shift + /: Comentar varias líneas con almohadilla
+Para más info: Ayuda -> área de juegos del editor

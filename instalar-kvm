@@ -1,0 +1,23 @@
+#!/bin/bash
+echo Queremos un valor distingo de cero:
+egrep -c '(vmx|svm|ept)' /proc/cpuinfo
+echo nested:
+egrep -c 'nested' /proc/cpuinfo
+echo kvm:
+egrep -c kvm /proc/cpuinfo
+echo Estas deben ser Y
+cat /sys/module/kvm_intel/parameters/nested
+cat /sys/module/kvm_intel/parameters/ept
+cat /sys/module/kvm_intel/parameters/emulate_invalid_guest_state
+echo Esta debe ser N
+cat /sys/module/kvm_intel/parameters/enable_apicv
+sudo apt-get install qemu-system-x86 qemu-kvm qemu libvirt-bin virt-manager virtinst bridge-utils cpu-checker virt-viewer
+kvm-ok
+cat /etc/group | grep libvirt | awk -F':' {'print $1'} | xargs -n1 sudo adduser $USER
+sudo adduser $USER kvm
+sudo virt-host-validate
+cat >/etc/modprobe.d/qemu-system-x86.conf <<<EOF
+options kvm ignore_msrs=1 report_ignored_msrs=0
+options kvm_intel nested=1 enable_apicv=0 ept=1
+EOF
+echo 1 | sudo tee /sys/module/kvm/parameters/ignore_msrs

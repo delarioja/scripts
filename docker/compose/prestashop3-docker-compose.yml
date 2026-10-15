@@ -1,0 +1,63 @@
+#docker-compose.yml para que MariaDB siga con IP fija pero PrestaShop pueda escalar con múltiples réplicas
+# MariaDB mantiene su IP fija para que PrestaShop lo encuentre sin problemas.
+# PrestaShop se escala con múltiples instancias (replicas: 3).
+# Un balanceador de carga (Nginx) distribuye el tráfico entre las instancias de PrestaShop.
+#version: '3.8'
+
+networks:
+  prestashop_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
+services:
+  db:
+    image: mariadb:11.4
+    container_name: prestashop_db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      prestashop_net:
+        ipv4_address: 192.168.1.100
+
+  prestashop:
+    image: prestashop/prestashop:latest
+    deploy:
+      replicas: 3  # 🔹 Escalamos a 3 instancias
+    restart: always
+    environment:
+      DB_SERVER: db
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWORD: prestashop
+      PS_DEV_MODE: 1
+      PS_INSTALL_AUTO: 1
+      PS_ERASE_DB: 0
+    volumes:
+      - prestashop_data:/var/www/html
+    networks:
+      - prestashop_net
+
+  nginx:
+    image: nginx:latest
+    container_name: prestashop_balancer
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - prestashop
+    networks:
+      - prestashop_net
+
+volumes:
+  db_data:
+  prestashop_data:

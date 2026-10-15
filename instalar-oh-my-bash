@@ -1,0 +1,16 @@
+#!/bin/bash
+# con oh my bash y agnoster y sacado de
+# https://ohmybash.nntoan.com/
+# https://github.com/ohmybash/oh-my-bash
+
+sudo apt install git curl
+bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"
+
+# https://github.com/ohmybash/oh-my-bash/tree/master/themes/agnoster
+# ya no hace falta porque viene por defecto: mkdir ~/.oh-my-bash/themes/agnoster
+# pero hay que instalar un font
+git clone https://github.com/powerline/fonts.git fonts
+./fonts/install.sh
+sudo rm -r fonts
+sed -i 's/OSH_THEME=\"font\"/OSH_THEME=\"agnoster\"/g' .bashrc
+# faltaría en Preferencias de tu terminal poner tipografía: Meslo LG M DZ for Powerline Regular
